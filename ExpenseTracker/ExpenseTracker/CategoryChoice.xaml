@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" xmlns:model="clr-namespace:ExpenseTracker.Model"
+             x:Class="ExpenseTracker.CategoryChoice">
+
+    <NavigationPage.TitleView>
+        <Label Text="Category Choices"
+               FontSize="30"
+               FontFamily="Verdana"
+               TextColor="Black"
+               FontAttributes="Bold"
+               VerticalOptions="CenterAndExpand"
+               HorizontalOptions="CenterAndExpand"
+                />
+    </NavigationPage.TitleView>
+    
+    <ContentPage.Content>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <ListView x:Name="CategoryIconView"
+                      SelectionMode="Single"
+                      VerticalOptions="StartAndExpand"
+                      Grid.Row="1"
+                      RowHeight="70"
+                      ItemSelected="CategoryIconView_ItemSelected">
+                <ListView.ItemTemplate>
+                    <DataTemplate x:DataType="model:CategoryItem">
+                        <ImageCell Text="{Binding Name}"
+                                   TextColor="Black"
+                                   ImageSource="{Binding IconImage}"
+                                   />
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

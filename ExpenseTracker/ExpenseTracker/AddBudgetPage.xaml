@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ExpenseTracker.AddBudgetPage">
+    <NavigationPage.TitleView>
+        <Label Text="Set Your Monthly Budger"
+               FontSize="30"
+               FontFamily="Verdana"
+               TextColor="Black"
+               FontAttributes="Bold"
+               VerticalOptions="CenterAndExpand"
+               HorizontalOptions="CenterAndExpand"
+               />
+    </NavigationPage.TitleView>
+    <ContentPage.Content>
+        <StackLayout Margin="0,100,0,0">
+            <Label x:Name="YearMonthLabel"
+                   FontSize="30"
+                   FontAttributes="Bold"
+                   FontFamily="Verdana"
+                   HorizontalTextAlignment="Center"
+                   Margin="0,0,0,50"/>
+            <Entry x:Name="BudgetInputTextBox"
+                   FontSize="15"
+                   Placeholder="Enter Budget"/>
+            <Button x:Name="ContinueButton"
+                    Text="Continue"
+                    FontFamily="Verdana"
+                    FontSize="Medium"
+                    Clicked="ContinueButton_Clicked"/>
+            <Button x:Name="CancelButton"
+                    Text="Cancel"
+                    FontFamily="Verdana"
+                    FontSize="Medium"
+                    Clicked="CancelButton_Clicked"/>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

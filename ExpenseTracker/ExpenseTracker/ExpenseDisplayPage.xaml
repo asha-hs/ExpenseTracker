@@ -1,0 +1,203 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" xmlns:model="clr-namespace:ExpenseTracker.Model"
+             x:Class="ExpenseTracker.ExpenseDisplayPage">
+    <ContentPage.Resources>
+        <Style TargetType="Frame">
+            <Setter Property="VisualStateManager.VisualStateGroups">
+                <VisualStateGroupList>
+                    <VisualStateGroup x:Name="CommaonStates">
+                        <VisualState x:Name="Normal"/>
+                        <VisualState x:Name="Selected">
+                            <VisualState.Setters>
+                                <Setter Property="BackgroundColor"
+                                        Value="LightSkyBlue"/>
+                            </VisualState.Setters>
+                        </VisualState>
+                    </VisualStateGroup>
+                </VisualStateGroupList>
+            </Setter>
+        </Style>
+               
+    </ContentPage.Resources>
+
+    <NavigationPage.TitleView>
+        <StackLayout Orientation="Horizontal">
+            <Button x:Name="PreviousMonthBtn"
+                    Text="&lt;"
+                    FontSize="30"
+                    FontFamily="Verdana"
+                    HorizontalOptions="StartAndExpand"
+                    WidthRequest="40"
+                    HeightRequest="30"
+                    BackgroundColor="Transparent"
+                    Padding="0,0,0,5"
+                    Clicked="PreviousMonthBtn_Clicked"/>
+
+            <Picker x:Name="MonthPicker"
+                    Title="Select A Month"
+                    FontFamily="Verdana"
+                    HorizontalTextAlignment="Center"
+                    FontAttributes="Bold"
+                    TextColor="Black"
+                    FontSize="20"/>
+            <Picker x:Name="YearPicker"
+                    Title="Select A Year"
+                    FontFamily="Verdana"
+                    HorizontalTextAlignment="Center"
+                    FontAttributes="Bold"
+                    TextColor="Black"
+                    FontSize="20"/>
+
+            <Button x:Name="NextMonthBtn"
+                    Text=">"
+                    FontSize="30"
+                    FontFamily="Verdana"
+                    HorizontalOptions="EndAndExpand"
+                    WidthRequest="40"
+                    HeightRequest="30"
+                    CornerRadius="5"
+                    BackgroundColor="Transparent"
+                    Padding="0,0,0,5"
+                    Clicked="NextMonthBtn_Clicked"/>
+        </StackLayout>
+    </NavigationPage.TitleView>
+    
+    <ContentPage.Content>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="100"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <StackLayout Grid.Row="0"
+                         Orientation="Horizontal"
+                         HorizontalOptions="Center"
+                         VerticalOptions="Center">
+                <StackLayout Margin="0,0,15,0"
+                             Orientation="Vertical"
+                             VerticalOptions="FillAndExpand"
+                             HorizontalOptions="End">
+                    <Label Text="Budget Total"
+                           FontSize="Medium"
+                           FontAttributes="Bold"
+                           FontFamily="Verdana"
+                           VerticalOptions="Center"
+                           HorizontalTextAlignment="Center"
+                           HorizontalOptions="End"/>
+                    <Label FontSize="Large" 
+                           FontFamily="Verdana"
+                           VerticalOptions="Center" 
+                           HorizontalTextAlignment="End" 
+                           HorizontalOptions="Center"
+                           x:Name="MonthBudget"/>
+                </StackLayout>
+                <BoxView Color="Black"
+                         WidthRequest="1"/>
+                <StackLayout Orientation="Vertical"
+                             Margin="15,0,0,0"
+                             VerticalOptions="FillAndExpand"
+                             HorizontalOptions="Start">
+                    <Label Text="Remaining"
+                           FontSize="Medium"
+                           FontFamily="Verdana"
+                           FontAttributes="Bold"
+                           VerticalOptions="Center"
+                           HorizontalTextAlignment="Center"
+                           HorizontalOptions="Start"/>
+                    <Label FontSize="Large"
+                           VerticalOptions="Center"
+                           FontFamily="Verdana"
+                           HorizontalOptions="Center"
+                           HorizontalTextAlignment="Start"
+                           x:Name="BalanceDisplay"/>
+
+                </StackLayout>
+                             
+            </StackLayout>
+            <StackLayout Orientation="Horizontal"
+                         Grid.Row="1"
+                         x:Name="EditDeleteStack">
+                <Button Text="Delete"
+                        CornerRadius="10"
+                        FontSize="10"
+                        FontAttributes="Bold"
+                        x:Name="DeleteExpense"
+                        Clicked="DeleteExpense_Clicked"/>
+                <Button Text="EditExpense"
+                        CornerRadius="10"
+                        FontSize="10"
+                        FontAttributes="Bold"
+                        x:Name="EditExpense"
+                        Clicked="EditExpense_Clicked"/>
+                <Button Text="Cancel"
+                        CornerRadius="10"
+                        FontSize="10"
+                        FontAttributes="Bold"
+                        x:Name="CancelSelection"
+                        HorizontalOptions="EndAndExpand"
+                        Clicked="CancelSelection_Clicked"/>
+            </StackLayout>
+            <CollectionView x:Name="ExpenseListView"
+                            Margin="10,10,10,20"
+                            Grid.Row="2"
+                            EmptyView="No Expense for this month"
+                            SelectionMode="Single"
+                            SelectionChanged="ExpenseListView_SelectionChanged">
+                <CollectionView.ItemsLayout>
+                    <LinearItemsLayout Orientation="Vertical"
+                                       ItemSpacing="10"/>
+                </CollectionView.ItemsLayout>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="model:Expense">
+                        <Frame BorderColor="Gray"
+                               CornerRadius="7"
+                               Padding="6"
+                               HasShadow="True">
+                            <StackLayout>
+                                <Label x:Name="ExpenseNameLabel"
+                                       FontFamily="Verdana"
+                                       FontAttributes="Bold"
+                                       FontSize="Large"
+                                       Text="{Binding Name, TargetNullValue='(No Name Set)'}"/>
+                                <BoxView Color="Gray"
+                                         HeightRequest="2"
+                                         HorizontalOptions="Fill"/>
+                                <Label x:Name="ExpenseAmountLabel"
+                                       FontFamily="Verdana"
+                                       FontSize="Subtitle"
+                                       Text="{Binding Amount, TargetNullValue='${0:N}'}"
+                                       HorizontalTextAlignment="End"/>
+                                <Label x:Name="ExpenseCategoryLabel"
+                                       FontFamily="Verdana"
+                                       FontSize="Subtitle"
+                                       Text="{Binding CategoryName,TargetNullValue='(No category selected)'}"/>
+                                <Label x:Name="ExpenseDateLabel"
+                                       FontFamily="Verdana"
+                                       FontSize="Subtitle"
+                                       Text="{Binding Date, StringFormat='{0:MM/dd/yyyy}'}"/>
+                            </StackLayout>
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+            <Button Text="+"
+                    Grid.Row="2"
+                    BorderColor="#2b3c3c" 
+                    BorderWidth="1" 
+                    FontSize="30"
+                    Padding="0,0,0,5"
+                    FontAttributes="Bold" 
+                    BackgroundColor="#2196F3" 
+                    BorderRadius="35" 
+                    TextColor="Black"
+                    HorizontalOptions="End" 
+                    WidthRequest="80" 
+                    HeightRequest="40" 
+                    Margin="0,0,20,22" 
+                    VerticalOptions="End"
+                    x:Name="AddExpenseButton"
+                    Clicked="OnAddExpenseClicked"/>
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>
