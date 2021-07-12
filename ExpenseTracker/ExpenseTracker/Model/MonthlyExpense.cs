@@ -15,7 +15,11 @@ namespace ExpenseTracker.Model
             get
             {
                 double totalExp = 0.0;
-                ExpenseList.ForEach(exp => totalExp += exp.Amount);
+                if(ExpenseList != null)
+                {
+                    ExpenseList.ForEach(exp => totalExp += exp.Amount);
+                }
+                
                 return Budget - totalExp;
 
             }

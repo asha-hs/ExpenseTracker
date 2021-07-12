@@ -25,7 +25,7 @@ namespace ExpenseTracker
 
             MonthPicker.ItemsSource = Enum.GetNames(typeof(Months)).ToList();
             int currentyear = DateTime.Now.Year;
-            YearPicker.ItemsSource = new List<int> { currentyear, currentyear - 1, currentyear + 1 };
+            YearPicker.ItemsSource = new List<int> { currentyear, currentyear - 1, currentyear - 2 };
             
         }
         protected override async void OnAppearing()
@@ -37,10 +37,10 @@ namespace ExpenseTracker
 
 
             MonthlyExpense monthlyExpense = new MonthlyExpense();
-            ExpenseManager.GetMonthlyExpenses(DateTime.Now.Month, DateTime.Now.Year, ref monthlyExpense);
+            ExpenseManager.GetMonthlyExpenses(currentMonth, currentYear, ref monthlyExpense);
 
             MonthPicker.SelectedIndex = currentMonth - 1;
-            YearPicker.SelectedIndex = currentYear;
+            YearPicker.SelectedItem = currentYear;
 
             MonthPicker.SelectedIndexChanged += MonthPicker_SelectedIndexChanged;
             YearPicker.SelectedIndexChanged += YearPicker_SelectedIndexChanged;

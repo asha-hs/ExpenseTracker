@@ -30,7 +30,7 @@ namespace ExpenseTracker
         private async void ContinueButton_Clicked(object sender, EventArgs e)
         {
             string inputstr = BudgetInputTextBox.Text;
-            if (String.IsNullOrEmpty(inputstr) || Double.TryParse(inputstr,out _) || Double.Parse(inputstr) <= 0)
+            if (String.IsNullOrEmpty(inputstr) || !Double.TryParse(inputstr,out _) || Double.Parse(inputstr) <= 0)
             {
                 await DisplayAlert("Error", "Please Enter Budget Amount", "OK");
             }

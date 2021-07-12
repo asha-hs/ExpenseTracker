@@ -64,7 +64,11 @@ namespace ExpenseTracker.Model
                 if(item.Year == year)
                 {
                     var expenselist = item.MonthlyExpenseList.Where(eachmonth => eachmonth.Month == month).ToList();
-                    monthlyexpense = expenselist[0];
+                    if(expenselist.Count > 0)
+                    {
+                        monthlyexpense = expenselist[0];
+                    }
+                    
                     break;
                 }
             }
