@@ -95,32 +95,59 @@ namespace ExpenseTracker
             await Navigation.PushModalAsync(new NavigationPage(new AddBudgetPage { BindingContext = yearmonth }));
         }
 
-        private void YearPicker_SelectedIndexChanged(object sender, EventArgs e)
+        private async void YearPicker_SelectedIndexChanged(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
+            var selectedMonth = MonthPicker.SelectedIndex + 1;
+            var selectedYear = (int)YearPicker.SelectedItem;
+            string yearmonth = $"{selectedMonth}.{selectedYear}";
+
+            await Navigation.PushModalAsync(new NavigationPage(new ExpenseDisplayPage { BindingContext = yearmonth }));
         }
 
-        private void MonthPicker_SelectedIndexChanged(object sender, EventArgs e)
+        private async void MonthPicker_SelectedIndexChanged(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
+            var selectedMonth = MonthPicker.SelectedIndex + 1;
+            var selectedYear = (int)YearPicker.SelectedItem;
+            string yearmonth = $"{selectedMonth}.{selectedYear}";
+
+            await Navigation.PushModalAsync(new NavigationPage(new ExpenseDisplayPage { BindingContext = yearmonth }));
         }
 
-        private void PreviousMonthBtn_Clicked(object sender, EventArgs e)
+        private async void PreviousMonthBtn_Clicked(object sender, EventArgs e)
         {
+            string yearmonth;
+            if(currentMonth != 12)
+            {
+                yearmonth = $"{currentMonth - 1}.{currentYear}";
+            }else
+            {
+                yearmonth = $"1.{currentYear-1}";
+            }
+            await Navigation.PushModalAsync(new NavigationPage(new ExpenseDisplayPage { BindingContext = yearmonth }));
 
         }
 
-        private void NextMonthBtn_Clicked(object sender, EventArgs e)
+        private async void NextMonthBtn_Clicked(object sender, EventArgs e)
         {
+            string yearmonth;
+            if(currentMonth != 12)
+            {
+                yearmonth = $"{currentMonth + 1}.{currentYear}";
+            }else
+            {
+                yearmonth = $"1.{currentYear + 1}";
+            }
 
+            await Navigation.PushModalAsync(new NavigationPage(new ExpenseDisplayPage { BindingContext = yearmonth }));
         }
 
         private async void DeleteExpense_Clicked(object sender, EventArgs e)
         {
-            ExpenseListView.SelectedItem = null;
-            var expense = (Expense)BindingContext;
-            ExpenseManager.DeleteMonthlyExpense(DateTime.Now.Month, DateTime.Now.Year, expense);
-            await Navigation.PushModalAsync(new NavigationPage(new ExpenseDisplayPage()));
+            
+            var expense = (Expense)ExpenseListView.SelectedItem;
+            string yearmonth = $"{currentMonth}.{currentYear}";
+            ExpenseManager.DeleteMonthlyExpense(currentMonth, currentYear, expense);
+            await Navigation.PushModalAsync(new NavigationPage(new ExpenseDisplayPage { BindingContext = yearmonth}));
         }
 
         private async void EditExpense_Clicked(object sender, EventArgs e)
@@ -140,13 +167,20 @@ namespace ExpenseTracker
 
         private void ExpenseListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            EditDeleteStack.IsVisible = true;
+            if(ExpenseListView.SelectedItem != null)
+            {
+                EditDeleteStack.IsVisible = true;
+            }else
+            {
+                EditDeleteStack.IsVisible = false;
+            }
+            
         }
 
         private async void OnAddExpenseClicked(object sender, EventArgs e)
         {
-            await Navigation.PushModalAsync(new NavigationPage(new AddExpensePage 
-                                            { BindingContext = new Expense() }));
+            await Navigation.PushModalAsync(new NavigationPage(new AddExpensePage
+            { BindingContext = new Expense { Date = new DateTime(currentYear, currentMonth, 1) } }));
         }
     }
 }

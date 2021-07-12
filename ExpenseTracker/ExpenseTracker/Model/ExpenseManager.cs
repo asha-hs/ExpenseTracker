@@ -83,6 +83,25 @@ namespace ExpenseTracker.Model
             }
             SerializeData();
         }
+
+        internal static void AddModifyMonthlyExpense(int month, int year, Expense oldexpense, Expense expense)
+        {
+            foreach(YearlyExpense item in yearlyExpenseList)
+            {
+                if(item.Year == year)
+                {
+                    var toadd = item.MonthlyExpenseList.Where(eachmonth => eachmonth.Month == month).ToList();
+                    if(oldexpense != null)
+                    {
+                        toadd[0].ExpenseList.Remove(oldexpense);
+                    }
+                    toadd[0].ExpenseList.Add(expense);
+                    break;
+                }
+            }
+            SerializeData();
+        }
+
         private static void DeserializeData(string filePath)
         {
             XmlSerializer serializer = new XmlSerializer(typeof(List<YearlyExpense>));

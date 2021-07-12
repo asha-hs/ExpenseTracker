@@ -13,7 +13,11 @@ namespace ExpenseTracker
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class AddExpensePage : ContentPage
     {
-        public Expense expense { get; set; }
+        private int currentMonth;
+        private int currentYear;
+
+        private string oldCatSelection;
+        public Expense expenseContext { get; set; }
         public AddExpensePage()
         {
             InitializeComponent();
@@ -24,7 +28,23 @@ namespace ExpenseTracker
 
         protected override void OnAppearing()
         {
-            expense = (Expense)BindingContext;
+            expenseContext = (Expense)BindingContext;
+
+            currentMonth = expenseContext.Date.Month;
+            currentYear = expenseContext.Date.Year;
+            CatSelection.Text = expenseContext.CategoryName;
+
+            ExpenseDatePicker.MinimumDate = new DateTime(currentYear, currentMonth, 1);
+            int daysallowed;
+            if(DateTime.Now.Year == currentYear && DateTime.Now.Month == currentMonth)
+            {
+                daysallowed = DateTime.Now.Day;
+            }
+            else
+            {
+                daysallowed = DateTime.DaysInMonth(currentYear, currentMonth);
+            }
+            ExpenseDatePicker.MaximumDate = new DateTime(currentYear, currentMonth, daysallowed);
 
             var catSelectionTapped = new TapGestureRecognizer();
             catSelectionTapped.Tapped += CatSelectionTapped_Tapped;
@@ -39,8 +59,17 @@ namespace ExpenseTracker
 
         private async void ExpenseDoneBtn_Clicked(object sender, EventArgs e)
         {
-            var expense = (Expense)BindingContext;
-            ExpenseManager.AddMonthlyExpense(DateTime.Now.Month, DateTime.Now.Year, expense);
+            if(String.IsNullOrEmpty(ExpenseAmountEntry.Text) || !Double.TryParse(ExpenseAmountEntry.Text,out _) || Double.Parse(ExpenseAmountEntry.Text) <= 0 || string.IsNullOrEmpty(CatSelection.Text))
+            {
+                await DisplayAlert("Error", "Please enter valid values for all entries", "OK");
+            }
+            var expense = new Expense();
+            expense.Name = ExpenseNameEntry.Text;
+            expense.Amount = Double.Parse(ExpenseAmountEntry.Text);
+            expense.CategoryName = CatSelection.Text;
+            expense.Date = ExpenseDatePicker.Date;
+            ExpenseManager.AddModifyMonthlyExpense(currentMonth, currentYear, expenseContext, expense);
+           // ExpenseManager.AddMonthlyExpense(DateTime.Now.Month, DateTime.Now.Year, expense);
             await Navigation.PushModalAsync(new NavigationPage(new ExpenseDisplayPage()));
         }
 
