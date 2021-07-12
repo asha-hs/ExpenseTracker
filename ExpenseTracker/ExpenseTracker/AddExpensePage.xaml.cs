@@ -53,6 +53,7 @@ namespace ExpenseTracker
 
         private async void CatSelectionTapped_Tapped(object sender, EventArgs e)
         {
+            oldCatSelection = CatSelection.Text;
             var expense = (Expense)BindingContext;
             await Navigation.PushModalAsync(new NavigationPage(new CategoryChoice { BindingContext = expense }));
         }
@@ -70,11 +71,15 @@ namespace ExpenseTracker
             expense.Date = ExpenseDatePicker.Date;
             ExpenseManager.AddModifyMonthlyExpense(currentMonth, currentYear, expenseContext, expense);
            // ExpenseManager.AddMonthlyExpense(DateTime.Now.Month, DateTime.Now.Year, expense);
-            await Navigation.PushModalAsync(new NavigationPage(new ExpenseDisplayPage()));
+            await Navigation.PopModalAsync();
         }
 
         private async void OnCancelButtonClicked(object sender, EventArgs e)
         {
+            if (!string.IsNullOrEmpty(oldCatSelection))
+            {
+                expenseContext.CategoryName = oldCatSelection;
+            }
             //go back to original
             await Navigation.PopModalAsync();
         }
